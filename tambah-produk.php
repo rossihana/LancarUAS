@@ -6,6 +6,7 @@ class WarungBerkahUAS
 {
     private $conn;
 
+    // Construct
     public function __construct($conn)
     {
         $this->conn = $conn;

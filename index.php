@@ -1,11 +1,11 @@
 <?php
-
 include 'db.php';
 
 class WarungBase
 {
     private $conn;
 
+    // Construct
     public function __construct($conn)
     {
         $this->setConn($conn);
@@ -23,37 +23,71 @@ class WarungBase
         $this->conn = $conn;
     }
 
+    // Mendapatkan informasi kontak admin berdasarkan adminId
     public function getContactInfo($adminId)
     {
-        $kontak = mysqli_query($this->getConn(), "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = $adminId");
+        // Menghindari SQL injection dengan escape parameter
+        $adminId = mysqli_real_escape_string($this->getConn(), $adminId);
+
+        // Query untuk mendapatkan informasi kontak admin
+        $kontak = mysqli_query($this->getConn(), "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = '$adminId'");
+        
+        // Mengembalikan hasil query dalam bentuk objek
         return mysqli_fetch_object($kontak);
     }
 
+    // Mendapatkan daftar kategori produk
     public function getCategories()
     {
+        // Query untuk mendapatkan semua kategori produk
         $kategori = mysqli_query($this->getConn(), "SELECT * FROM tb_category ORDER BY category_id DESC");
+        
+        // Mengembalikan hasil query
         return $kategori;
     }
 
+    // Metode yang akan di-override
     public function getProducts()
     {
+        // Query untuk mendapatkan produk dengan status 1 (aktif) dan batas 8 produk terbaru
         $produk = mysqli_query($this->getConn(), "SELECT * FROM tb_product WHERE product_status = 1 ORDER BY product_id DESC LIMIT 8");
+        
+        // Mengembalikan hasil query
         return $produk;
     }
 }
 
 class WarungBerkahUAS extends WarungBase
 {
-    // Metode tambahan yang spesifik untuk WarungBerkahUAS dapat ditambahkan di sini.
+    // Metode overriding
+    public function getProducts($search, $category)
+    {
+        $where = "";
+        if ($search != '' || $category != '') {
+            // Membuat kondisi WHERE berdasarkan pencarian dan kategori
+            $where = "AND product_name LIKE '%$search%' AND category_id LIKE '%$category%'";
+        }
+
+        // Query untuk mendapatkan produk dengan status 1 (aktif) dan kondisi tambahan
+        $produk = mysqli_query($this->getConn(), "SELECT * FROM tb_product WHERE product_status = 1 $where ORDER BY product_id DESC");
+        
+        // Mengembalikan hasil query
+        return $produk;
+    }
 }
 
+// Instansiasi objek WarungBerkahUAS
 $warungBerkah = new WarungBerkahUAS($conn);
 
 $adminId = 1;
 $contactInfo = $warungBerkah->getContactInfo($adminId);
 
-?>
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$category = isset($_GET['kat']) ? $_GET['kat'] : '';
 
+// Memanggil metode overriding
+$products = $warungBerkah->getProducts($search, $category);
+?>
 
 <!DOCTYPE html>
 <html>
@@ -89,6 +123,7 @@ $contactInfo = $warungBerkah->getContactInfo($adminId);
             <h3>Kategori</h3>
             <div class="box">
                 <?php
+                // Mendapatkan daftar kategori
                 $categories = $warungBerkah->getCategories();
                 if (mysqli_num_rows($categories) > 0) {
                     while ($category = mysqli_fetch_array($categories)) {
@@ -115,40 +150,12 @@ $contactInfo = $warungBerkah->getContactInfo($adminId);
             <h3>Produk Terbaru</h3>
             <div class="box">
                 <?php
-                $products = $warungBerkah->getProducts();
+                // Mendapatkan daftar produk menggunakan metode overriding
+                $products = $warungBerkah->getProducts($search, $category);
                 if (mysqli_num_rows($products) > 0) {
                     while ($product = mysqli_fetch_array($products)) {
                         ?>
                         <a href="detail-produk.php?id=<?php echo $product['product_id'] ?>">
                             <div class="col-4">
                                 <img src="produk/<?php echo $product['product_image'] ?>">
-                                <p class="nama"><?php echo substr($product['product_name'], 0, 30) ?></p>
-                                <p class="harga">Rp. <?php echo number_format($product['product_price']) ?></p>
-                            </div>
-                        </a>
-                        <?php
-                    }
-                } else {
-                    ?>
-                    <p>Produk tidak ada</p>
-                <?php } ?>
-            </div>
-        </div>
-    </div>
-
-    <!-- footer -->
-    <div class="footer">
-        <div class="container">
-            <h4>Alamat</h4>
-            <p><?php echo $contactInfo->admin_address ?></p>
-
-            <h4>Email</h4>
-            <p><?php echo $contactInfo->admin_email ?></p>
-
-            <h4>No. Hp</h4>
-            <p><?php echo $contactInfo->admin_telp ?></p>
-            <small>Copyright &copy; 2023 - Buatan Akhyar dan Ossi.</small>
-        </div>
-    </div>
-</body>
-</html>
+                                <p class="nama"><?
