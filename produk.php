@@ -1,49 +1,80 @@
 <?php
+// Menghilangkan pesan error untuk production
 error_reporting(0);
+
+// Menggunakan file koneksi database
 include 'db.php';
 
+// Kelas dasar untuk manajemen warung
 class WarungBase
 {
     protected $conn;
 
+    // Constructor untuk mengatur koneksi
     public function __construct($conn)
+    {
+        $this->setConn($conn);
+    }
+
+    // Getter untuk mendapatkan koneksi
+    public function getConn()
+    {
+        return $this->conn;
+    }
+
+    // Setter untuk mengatur koneksi
+    public function setConn($conn)
     {
         $this->conn = $conn;
     }
 
+    // Mendapatkan informasi kontak admin berdasarkan adminId
     public function getContactInfo($adminId)
     {
-        $kontak = mysqli_query($this->conn, "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = $adminId");
+        // Melakukan query untuk mendapatkan informasi kontak admin
+        $kontak = mysqli_query($this->getConn(), "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = $adminId");
+
+        // Mengembalikan hasil query dalam bentuk objek
         return mysqli_fetch_object($kontak);
     }
 }
 
+// Kelas yang mewarisi dari WarungBase, khusus untuk manajemen produk
 class WarungBerkahUAS extends WarungBase
 {
+    // Mendapatkan produk berdasarkan pencarian dan kategori
     public function getProducts($search, $category)
     {
         $where = "";
         if ($search != '' || $category != '') {
+            // Membuat kondisi WHERE berdasarkan pencarian dan kategori
             $where = "AND product_name LIKE '%$search%' AND category_id LIKE '%$category%'";
         }
 
-        $produk = mysqli_query($this->conn, "SELECT * FROM tb_product WHERE product_status = 1 $where ORDER BY product_id DESC");
+        // Melakukan query untuk mendapatkan produk dengan status 1 (aktif) dan kondisi tambahan
+        $produk = mysqli_query($this->getConn(), "SELECT * FROM tb_product WHERE product_status = 1 $where ORDER BY product_id DESC");
+
+        // Mengembalikan hasil query
         return $produk;
     }
 }
 
+// Instansiasi objek WarungBerkahUAS dengan menggunakan koneksi dari file db.php
 $warungBerkah = new WarungBerkahUAS($conn);
 
+// Mendapatkan informasi kontak admin berdasarkan adminId
 $adminId = 1;
 $contactInfo = $warungBerkah->getContactInfo($adminId);
 
+// Mendapatkan nilai pencarian (search) dan kategori (kat) dari URL
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $category = isset($_GET['kat']) ? $_GET['kat'] : '';
 
+// Mendapatkan daftar produk berdasarkan pencarian dan kategori
 $products = $warungBerkah->getProducts($search, $category);
-
 ?>
 
+<!-- HTML dan CSS untuk tampilan web -->
 <!DOCTYPE html>
 <html>
 
@@ -75,12 +106,13 @@ $products = $warungBerkah->getProducts($search, $category);
         </div>
     </div>
 
-    <!-- new product -->
+    <!-- Produk -->
     <div class="section">
         <div class="container">
             <h3>Produk</h3>
             <div class="box">
                 <?php
+                // Menampilkan daftar produk
                 if (mysqli_num_rows($products) > 0) {
                     while ($product = mysqli_fetch_array($products)) {
                         ?>

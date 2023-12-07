@@ -4,36 +4,47 @@ include 'db.php';
 
 class WarungBase
 {
-    protected $conn;
+    private $conn;
 
     public function __construct($conn)
+    {
+        $this->setConn($conn);
+    }
+
+    // Getter untuk $conn
+    public function getConn()
+    {
+        return $this->conn;
+    }
+
+    // Setter untuk $conn
+    public function setConn($conn)
     {
         $this->conn = $conn;
     }
 
     public function getContactInfo($adminId)
     {
-        $kontak = mysqli_query($this->conn, "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = $adminId");
+        $kontak = mysqli_query($this->getConn(), "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = $adminId");
         return mysqli_fetch_object($kontak);
     }
 
     public function getCategories()
     {
-        $kategori = mysqli_query($this->conn, "SELECT * FROM tb_category ORDER BY category_id DESC");
+        $kategori = mysqli_query($this->getConn(), "SELECT * FROM tb_category ORDER BY category_id DESC");
         return $kategori;
     }
 
     public function getProducts()
     {
-        $produk = mysqli_query($this->conn, "SELECT * FROM tb_product WHERE product_status = 1 ORDER BY product_id DESC LIMIT 8");
+        $produk = mysqli_query($this->getConn(), "SELECT * FROM tb_product WHERE product_status = 1 ORDER BY product_id DESC LIMIT 8");
         return $produk;
     }
 }
 
 class WarungBerkahUAS extends WarungBase
 {
-    // Additional methods specific to WarungBerkahUAS can be added here.
-
+    // Metode tambahan yang spesifik untuk WarungBerkahUAS dapat ditambahkan di sini.
 }
 
 $warungBerkah = new WarungBerkahUAS($conn);
@@ -42,6 +53,7 @@ $adminId = 1;
 $contactInfo = $warungBerkah->getContactInfo($adminId);
 
 ?>
+
 
 <!DOCTYPE html>
 <html>

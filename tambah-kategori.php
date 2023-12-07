@@ -2,10 +2,11 @@
 session_start();
 include 'db.php';
 
-class CategoryManager
+class WarungBerkahUAS
 {
     private $conn;
 
+    // Construct
     public function __construct($conn)
     {
         $this->conn = $conn;
@@ -15,9 +16,7 @@ class CategoryManager
     {
         $name = ucwords($name);
 
-        $insert = mysqli_query($this->conn, "INSERT INTO tb_category VALUES (
-                                        null,
-                                        '" . $name . "') ");
+        $insert = mysqli_query($this->conn, "INSERT INTO tb_category VALUES ( null,'" . $name . "') ");
 
         if ($insert) {
             echo '<script>alert("Tambah data berhasil")</script>';
@@ -28,7 +27,7 @@ class CategoryManager
     }
 }
 
-$categoryManager = new CategoryManager($conn);
+$categoryManager = new WarungBerkahUAS($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $categoryManager->addCategory($_POST['nama']);

@@ -1,37 +1,80 @@
 <?php
-error_reporting(0);
 include 'db.php';
 
-class WarungBerkahUAS
+class WarungBase
 {
-    private $conn;
+    protected $conn;
 
+    // Construct
     public function __construct($conn)
+    {
+        $this->setConn($conn);
+    }
+
+    // Getter untuk $conn
+    public function getConn()
+    {
+        return $this->conn;
+    }
+
+    // Setter untuk $conn
+    public function setConn($conn)
     {
         $this->conn = $conn;
     }
 
     public function getContactInfo($adminId)
     {
-        $kontak = mysqli_query($this->conn, "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = $adminId");
+        // Menghindari SQL injection dengan escape parameter
+        $adminId = mysqli_real_escape_string($this->getConn(), $adminId);
+        
+        // Query untuk mendapatkan informasi kontak admin
+        $kontak = mysqli_query($this->getConn(), "SELECT admin_telp, admin_email, admin_address FROM tb_admin WHERE admin_id = '$adminId'");
+        
+        // Mengembalikan hasil query dalam bentuk objek
         return mysqli_fetch_object($kontak);
     }
 
+    // Metode yang akan di-overriding
     public function getProductById($productId)
     {
-        $produk = mysqli_query($this->conn, "SELECT * FROM tb_product WHERE product_id = '$productId'");
+        // Menghindari SQL injection dengan escape parameter
+        $productId = mysqli_real_escape_string($this->getConn(), $productId);
+        
+        // Query untuk mendapatkan informasi produk berdasarkan ID
+        $produk = mysqli_query($this->getConn(), "SELECT * FROM tb_product WHERE product_id = '$productId'");
+        
+        // Mengembalikan hasil query dalam bentuk objek
         return mysqli_fetch_object($produk);
     }
 }
 
+// Pewarisan
+class WarungBerkahUAS extends WarungBase
+{
+    // Metode overriding
+    public function getProductById($productId)
+    {
+        // Implementasi khusus untuk WarungBerkahUAS
+        // Menambahkan kondisi WHERE untuk product_status
+        $productId = mysqli_real_escape_string($this->getConn(), $productId);
+        $produk = mysqli_query($this->getConn(), "SELECT * FROM tb_product WHERE product_id = '$productId' AND product_status = 1");
+        
+        // Mengembalikan hasil query dalam bentuk objek
+        return mysqli_fetch_object($produk);
+    }
+}
+
+// Instansiasi objek WarungBerkahUAS
 $warungBerkah = new WarungBerkahUAS($conn);
 
+// Mendapatkan informasi admin
 $adminId = 1;
 $contactInfo = $warungBerkah->getContactInfo($adminId);
 
+// Mendapatkan informasi produk berdasarkan ID
 $productId = isset($_GET['id']) ? $_GET['id'] : '';
 $product = $warungBerkah->getProductById($productId);
-
 ?>
 
 <!DOCTYPE html>
@@ -57,9 +100,9 @@ $product = $warungBerkah->getProductById($productId);
     <!-- search -->
     <div class="search">
         <div class="container">
-            <form action="produk.php">
-                <input type="text" name="search" placeholder="Cari Produk" value="<?php echo $_GET['search'] ?>">
-                <input type="hidden" name="kat" value="<?php echo $_GET['kat'] ?>">
+            <form action="produk.php" method="GET">
+                <input type="text" name="search" placeholder="Cari Produk" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
+                <input type="hidden" name="kat" value="<?php echo isset($_GET['kat']) ? $_GET['kat'] : ''; ?>">
                 <input type="submit" name="cari" value="Cari Produk">
             </form>
         </div>
@@ -80,7 +123,7 @@ $product = $warungBerkah->getProductById($productId);
                         <?php echo $product->product_description ?>
                     </p>
                     <p><a href="https://api.whatsapp.com/send?phone=<?php echo $contactInfo->admin_telp ?>&text=Hai, saya tertarik dengan produk Anda." target="_blank">
-                            Hubungin via Whatsapp
+                            Hubungi via Whatsapp
                             <img src="img/wa.png" width="50px"></a>
                     </p>
                 </div>

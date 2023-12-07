@@ -2,7 +2,7 @@
 
 include 'db.php';
 
-class DataDeletion
+class WarungBerkahUAS
 {
     private $conn;
 
@@ -35,6 +35,6 @@ class DataDeletion
     }
 }
 
-$dataDeletion = new DataDeletion($conn);
+$dataDeletion = new WarungBerkahUAS($conn);
 
 ?>
