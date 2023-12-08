@@ -51,7 +51,7 @@ class WarungBase
     {
         // Query untuk mendapatkan produk dengan status 1 (aktif) dan batas 8 produk terbaru
         $produk = mysqli_query($this->getConn(), "SELECT * FROM tb_product WHERE product_status = 1 ORDER BY product_id DESC LIMIT 8");
-        
+
         // Mengembalikan hasil query
         return $produk;
     }
@@ -60,8 +60,12 @@ class WarungBase
 class WarungBerkahUAS extends WarungBase
 {
     // Metode overriding
-    public function getProducts($search, $category)
+    public function getProducts()
     {
+        // Ambil parameter dari $_GET jika diperlukan
+        $search = isset($_GET['search']) ? $_GET['search'] : '';
+        $category = isset($_GET['kat']) ? $_GET['kat'] : '';
+
         $where = "";
         if ($search != '' || $category != '') {
             // Membuat kondisi WHERE berdasarkan pencarian dan kategori
@@ -75,6 +79,7 @@ class WarungBerkahUAS extends WarungBase
         return $produk;
     }
 }
+
 
 // Instansiasi objek WarungBerkahUAS
 $warungBerkah = new WarungBerkahUAS($conn);
@@ -151,11 +156,38 @@ $products = $warungBerkah->getProducts($search, $category);
             <div class="box">
                 <?php
                 // Mendapatkan daftar produk menggunakan metode overriding
-                $products = $warungBerkah->getProducts($search, $category);
+                 $products = $warungBerkah->getProducts($search, $category);
                 if (mysqli_num_rows($products) > 0) {
-                    while ($product = mysqli_fetch_array($products)) {
+                     while ($product = mysqli_fetch_array($products)) {
                         ?>
                         <a href="detail-produk.php?id=<?php echo $product['product_id'] ?>">
                             <div class="col-4">
-                                <img src="produk/<?php echo $product['product_image'] ?>">
-                                <p class="nama"><?
+                                 <img src="produk/<?php echo $product['product_image'] ?>">
+                                <p class="nama"><?php echo $product['product_name']; ?></p>
+                                <p class="harga">Rp. <?php echo number_format ($product['product_price']); ?></p>
+                            </div>
+                        </a>
+                        <?php
+                           }
+                         } else {
+                     ?>
+                     <p>Produk tidak ditemukan</p>
+                 <?php } ?>
+             </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+        <div class="container">
+            <h4>Alamat</h4>
+            <p><?php echo $contactInfo->admin_address ?></p>
+
+            <h4>Email</h4>
+            <p><?php echo $contactInfo->admin_email ?></p>
+
+            <h4>No. Hp</h4>
+            <p><?php echo $contactInfo->admin_telp ?></p>
+            <small>Copyright &copy; 2023 - Buatan Akhyar dan Ossi.</small>
+        </div>
+    </div>

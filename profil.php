@@ -14,6 +14,7 @@ class WarungBerkahUAS
         $this->fetchAdminData();
     }
 
+    // Memeriksa status login. Jika tidak login, redirect ke halaman login.
     public function checkLoginStatus()
     {
         if ($_SESSION['status_login'] != true) {
@@ -21,12 +22,14 @@ class WarungBerkahUAS
         }
     }
 
+    // Mengambil data admin dari database berdasarkan ID sesi.
     public function fetchAdminData()
     {
         $query = mysqli_query($this->conn, "SELECT * FROM tb_admin WHERE admin_id = '" . $_SESSION['id'] . "' ");
         $this->adminData = mysqli_fetch_object($query);
     }
 
+    // Mengelola proses pengeditan profil admin.
     public function editProfile()
     {
         if (isset($_POST['submit'])) {
@@ -53,6 +56,7 @@ class WarungBerkahUAS
         }
     }
 
+    // Mengelola proses perubahan password admin.
     public function changePassword()
     {
         if (isset($_POST['ubah_password'])) {
@@ -76,6 +80,7 @@ class WarungBerkahUAS
         }
     }
 
+    // Menampilkan bagian header HTML.
     public function renderHeader()
     {
         echo '
@@ -93,6 +98,7 @@ class WarungBerkahUAS
         </header>';
     }
 
+    // Menampilkan formulir profil dan formulir ubah password.
     public function renderProfileForm()
     {
         echo '
@@ -130,6 +136,7 @@ class WarungBerkahUAS
         </div>';
     }
 
+    // Menampilkan bagian footer HTML.
     public function renderFooter()
     {
         echo '

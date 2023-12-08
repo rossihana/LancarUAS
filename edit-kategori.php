@@ -11,9 +11,34 @@ class WarungBerkahUAS
         $this->conn = $conn;
     }
 
+    // Metode getter untuk mendapatkan nilai dari $conn
+    public function getConn()
+    {
+        return $this->conn;
+    }
+
+    // Metode setter untuk mengatur nilai $conn
+    public function setConn($conn)
+    {
+        $this->conn = $conn;
+    }
+
+    // Metode getter untuk mendapatkan nilai dari $_SESSION['status_login']
+    public function getLoginStatus()
+    {
+        return $_SESSION['status_login'];
+    }
+
+    // Metode setter untuk mengatur nilai $_SESSION['status_login']
+    public function setLoginStatus($status)
+    {
+        $_SESSION['status_login'] = $status;
+    }
+
     public function checkLoginStatus()
     {
-        if ($_SESSION['status_login'] != true) {
+        // Gunakan metode getter
+        if ($this->getLoginStatus() != true) {
             echo '<script>window.location="login.php"</script>';
         }
     }
@@ -99,6 +124,7 @@ $warungBerkahUAS = new WarungBerkahUAS($conn);
 $warungBerkahUAS->checkLoginStatus();
 
 ?>
+
 
 <!DOCTYPE html>
 <html>

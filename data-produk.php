@@ -6,12 +6,12 @@ class WarungBerkahUAS
 {
     private $conn;
 
-    // Construct
     public function __construct($conn)
     {
         $this->conn = $conn;
     }
 
+    // Memeriksa status login. Jika tidak login, redirect ke halaman login.
     public function checkLoginStatus()
     {
         if ($_SESSION['status_login'] != true) {
@@ -19,6 +19,7 @@ class WarungBerkahUAS
         }
     }
 
+    // Menampilkan bagian header HTML.
     public function renderHeader()
     {
         echo '
@@ -36,6 +37,7 @@ class WarungBerkahUAS
         </header>';
     }
 
+    // Menampilkan tabel produk beserta fungsi tambah, edit, dan hapus.
     public function renderProductTable()
     {
         echo '
@@ -92,6 +94,7 @@ class WarungBerkahUAS
         </div>';
     }
 
+    // Menampilkan bagian footer HTML.
     public function renderFooter()
     {
         echo '
