@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-class WarungBerkahUAS
+class Profil
 {
     private $conn;
     private $adminData;
@@ -148,7 +148,7 @@ class WarungBerkahUAS
     }
 }
 
-$warungBerkahUAS = new WarungBerkahUAS($conn);
+$warungBerkahUAS = new Profil($conn);
 ?>
 
 <!DOCTYPE html>

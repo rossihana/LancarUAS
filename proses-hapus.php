@@ -2,7 +2,7 @@
 
 include 'db.php';
 
-class WarungBerkahUAS
+class Hapus
 {
     private $conn;
 
@@ -35,6 +35,6 @@ class WarungBerkahUAS
     }
 }
 
-$dataDeletion = new WarungBerkahUAS($conn);
+$dataDeletion = new Hapus($conn);
 
 ?>

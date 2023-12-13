@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-class WarungBerkahUAS
+class Dashboard
 {
     private $isAdminLoggedIn;
 
@@ -58,7 +58,7 @@ class WarungBerkahUAS
     }
 }
 
-$warungBerkahUAS = new WarungBerkahUAS();
+$warungBerkahUAS = new Dashboard();
 $warungBerkahUAS->redirectToLogin();
 
 ?>

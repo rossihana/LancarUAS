@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-class WarungBerkahUAS
+class TambahKategori
 {
     private $conn;
 
@@ -27,7 +27,7 @@ class WarungBerkahUAS
     }
 }
 
-$categoryManager = new WarungBerkahUAS($conn);
+$categoryManager = new TambahKategori($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $categoryManager->addCategory($_POST['nama']);

@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-class WarungBerkahUAS
+class TambahProduk
 {
     private $conn;
 
@@ -47,7 +47,7 @@ class WarungBerkahUAS
     }
 }
 
-$productManager = new WarungBerkahUAS($conn);
+$productManager = new TambahProduk($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $kategori = $_POST['kategori'];

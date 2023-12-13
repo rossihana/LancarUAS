@@ -6,7 +6,7 @@ error_reporting(0);
 include 'db.php';
 
 // Kelas dasar untuk manajemen warung
-class WarungBase
+class Produk
 {
     protected $conn;
 
@@ -40,7 +40,7 @@ class WarungBase
 }
 
 // Kelas yang mewarisi dari WarungBase, khusus untuk manajemen produk
-class WarungBerkahUAS extends WarungBase
+class WarungBerkahUAS extends Produk
 {
     // Mendapatkan produk berdasarkan pencarian dan kategori
     public function getProducts($search, $category)

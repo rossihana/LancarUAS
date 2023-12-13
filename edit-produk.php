@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-class WarungBerkahUAS
+class EditProduk
 {
     private $conn;
 
@@ -151,7 +151,7 @@ class WarungBerkahUAS
     }
 }
 
-$warungBerkahUAS = new WarungBerkahUAS($conn);
+$warungBerkahUAS = new EditProduk($conn);
 $warungBerkahUAS->checkLoginStatus();
 ?>
 
