@@ -1,7 +1,7 @@
 <?php
 include 'db.php';
 
-class WarungBase
+class DetailProduk
 {
     protected $conn;
 
@@ -50,7 +50,7 @@ class WarungBase
 }
 
 // Pewarisan
-class WarungBerkahUAS extends WarungBase
+class WarungBerkahUAS extends DetailProduk
 {
     // Metode overriding
     public function getProductById($productId)
