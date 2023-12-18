@@ -104,6 +104,7 @@ $products = $warungBerkah->getProducts($search, $category);
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <!-- header -->
     <header>
         <div class="container">
@@ -188,6 +189,10 @@ $products = $warungBerkah->getProducts($search, $category);
 
             <h4>No. Hp</h4>
             <p><?php echo $contactInfo->admin_telp ?></p>
+
+            <h4>Admin Login</h4>
+            <p><a class="admin-btn" href="login.php">Login</a></p>
+
             <small>Copyright &copy; 2023 - Buatan Akhyar dan Ossi.</small>
         </div>
     </div>
