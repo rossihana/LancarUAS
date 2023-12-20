@@ -41,6 +41,16 @@ a {
 	border:none;
 	cursor: pointer;
 }
+
+.btn-back {
+	font-size: 14px;
+	padding:8px 15px;
+	background-color: #78E7B7;
+	color: rgb(0, 0, 0);
+	border:none;
+	cursor: pointer;
+}
+
 header {
 	background-color: #78E7B7;
 	color: rgb(0, 0, 0);

@@ -13,7 +13,10 @@
 		<form action="" method="POST">
 			<input type="text" name="user" placeholder="Username" class="input-control">
 			<input type="password" name="pass" placeholder="Password" class="input-control">
-			<input type="submit" name="submit" value="Login" class="btn">
+			<div style="display: flex; justify-content: space-between;">
+				<input type="submit" name="submit" value="Login" class="btn">
+				<a href="index.php" class="btn-back">Kembali</a> <!-- Tambahkan tombol kembali -->
+			</div>
 		</form>
 		<?php 
 			if(isset($_POST['submit'])){

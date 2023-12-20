@@ -143,6 +143,10 @@ $products = $warungBerkah->getProducts($search, $category);
 
             <h4>No. Hp</h4>
             <p><?php echo $contactInfo->admin_telp ?></p>
+
+            <h4>Admin Login</h4>
+            <p><a class="admin-btn" href="login.php">Login</a></p>
+
             <small>Copyright &copy; 2023 - Buatan Akhyar dan Ossi.</small>
         </div>
     </div>
